@@ -1,8 +1,20 @@
 import 'package:book_app/screens/home_screen.dart';
+import 'package:book_app/view_model/book_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-void main(List<String> args) {
-  runApp(MyApp());
+import 'package:provider/provider.dart';
+import 'data/local/storage_repository.dart';
+import 'data/repositories/book_repo.dart';
+void main(List<String> args) async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await StorageRepository.init();
+    runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (_) => BookViewModel(productRepo: BookRepo()))
+      ],
+      child: const  MyApp(),
+    ));
 }
 
 
@@ -19,7 +31,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(useMaterial3: false),
-          home: child,
+          home: const  HomeScreen(),
         );
       },
       child: const HomeScreen(),
